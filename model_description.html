@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>職場進階必備！各大 AI 廠商「主流模型型號」全解析終極百科</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --openai-color: #10a37f;
+            --google-color: #1a73e8;
+            --anthropic-color: #cc6633;
+            --meta-color: #0668e1;
+            --ms-color: #00a4ef;
+            --bg-light: #f8f9fa;
+            --border-color: #e2e8f0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.75;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f5f9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 50px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        }
+        h1 {
+            font-size: 2.4rem;
+            color: #0f172a;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+        .subtitle {
+            font-size: 1.15rem;
+            color: #64748b;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-openai { color: var(--openai-color); border-bottom-color: var(--openai-color); }
+        .brand-google { color: var(--google-color); border-bottom-color: var(--google-color); }
+        .brand-anthropic { color: var(--anthropic-color); border-bottom-color: var(--anthropic-color); }
+        .brand-meta { color: var(--meta-color); border-bottom-color: var(--meta-color); }
+        .brand-ms { color: var(--ms-color); border-bottom-color: var(--ms-color); }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+        ul {
+            margin-bottom: 1.5rem;
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 0.6rem;
+        }
+        strong {
+            color: #0f172a;
+        }
+        .tag {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: white;
+        }
+        .tag-speed { background-color: #10b981; }
+        .tag-balance { background-color: #3b82f6; }
+        .tag-heavy { background-color: #8b5cf6; }
+        .tag-agent { background-color: #f59e0b; }
+
+        /* 廠牌專屬卡片區塊 */
+        .brand-card {
+            background-color: var(--bg-light);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #cbd5e1;
+        }
+        .card-openai { border-left-color: var(--openai-color); background-color: #f0fdf4; }
+        .card-google { border-left-color: var(--google-color); background-color: #f0f7ff; }
+        .card-anthropic { border-left-color: var(--anthropic-color); background-color: #fffaf5; }
+        
+        /* 響應式表格網格 */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #ffffff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            min-width: 750px;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-weight: 600;
+            padding: 14px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            font-size: 0.95rem;
+        }
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+        .highlight-text {
+            font-weight: bold;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>各大 AI 廠商「主流模型型號」全解析終極百科</h1>
+    <div class="subtitle">為上班族、經理人量身打造的各家 AI 工具實戰挑選指南（包含 OpenAI, Google, Anthropic, Meta, Microsoft）</div>
+    
+    <p>走進現代辦公室，大家對 ChatGPT、Gemini、Claude 這些名字早就耳熟能詳。然而，當你真正點開工作後台或 API 選單時，常常會被 <code>GPT-4o</code>、<code>o3-mini</code>、<code>Gemini 3.5 Flash</code>、<code>Claude 3.5 Sonnet</code>、<code>Llama 3.3</code> 這些排列組合塞滿腦袋。各家廠商每年（甚至每季）都在推出新型號，它們到底差在哪裡？</p>
+    
+    <p>這篇終極大百科將為你解剖目前全球最頂尖的五大 AI 巨頭，詳細梳理它們旗下的核心模型與戰力分佈，讓你根據工作預算與複雜度，秒選出最完美的虛擬隊友。</p>
+
+    <!-- SECTION 1: OPENAI -->
+    <h2 class="brand-openai">🟢 1. OpenAI 家族 —— 市場領頭羊與深度推理先驅</h2>
+    <p>OpenAI 是目前普及率最高的廠商。他們最厲害的特色在於領先市場的<strong>「o 系列推理模型」</strong>，會自己思考、自己Debug，專治極度燒腦的硬核任務。</p>
+    
+    <div class="brand-card card-openai">
+        <h3>o1 / o3 / o3-pro <span class="tag tag-heavy">旗艦推理顧問</span></h3>
+        <p><strong>定位：</strong> 高階軍師。這系列模型在回答前會卡住幾秒到幾分鐘進行「深度思考」。它們在國際數學奧林匹亞、寫複雜程式碼的基準測試中拿到了突破性的高分。如果你需要它分析<strong>非常嚴謹的法務合約漏洞、撰寫大型專案的後端程式碼、或是處理微積分與複雜會計帳務</strong>，選這個系列最準確。</p>
+
+        <h3>o1-mini / o3-mini <span class="tag tag-speed">輕量推理專家</span></h3>
+        <p><strong>定位：</strong> 高性價比工程師。保留了 o 系列「先思考、再回答」的精髓，但優化了速度與價格。在**編寫一般 Python/JavaScript 程式碼、除錯（Debug）、以及需要嚴謹邏輯的資料分析**時，它是速度與智商兼具的優秀選擇。</p>
+
+        <h3>GPT-4o <span class="tag tag-balance">萬能資深專員</span></h3>
+        <p><strong>定位：</strong> 全能型員工。字尾的「o」代表 Omni（全方位），它能流暢處理文字、圖片與音訊。適合用於<strong>撰寫長篇商業報告、跨國語言翻譯、解讀財務圖表</strong>。它是日常辦公最不容易出錯的中堅主力。</p>
+
+        <h3>GPT-4o mini <span class="tag tag-speed">高效率實習生</span></h3>
+        <p><strong>定位：</strong> 反應極快的小助手。速度非常快、價格極度便宜。適合用於<strong>快速回答日常問題、客服對話、大量電子郵件的錯字修正與分類</strong>。</p>
+    </div>
+
+    <!-- SECTION 2: GOOGLE -->
+    <h2 class="brand-google">🔵 2. Google Gemini 家族 —— 超長上下文與原生多模態王者</h2>
+    <p>Google 的絕活在於<strong>「Context Window（上下文視窗）世界第一大」</strong>與<strong>「極度大方的免費體驗額度」</strong>。它能一次吞下幾十萬字的整本小說或一整小時的影片，是處理海量資料的神器。</p>
+    
+    <div class="brand-card card-google">
+        <h3>Gemini 3.1 Pro <span class="tag tag-heavy">旗艦策略顧問</span></h3>
+        <p><strong>定位：</strong> 知識淵博的高級幕僚。擁有高達 200 萬 Token 的記憶體空間。你可以**直接丟入一整本厚厚的企業操作手冊 PDF、長達一小時的錄音檔，或是整個專案的程式碼庫**，它都能在幾秒內幫你融會貫通並產出摘要。</p>
+
+        <h3>Gemini 3.5 Flash <span class="tag tag-balance">全能高速專員</span></h3>
+        <p><strong>定位：</strong> 速度驚人的多媒體悍將。雖然名字叫 Flash（輕量），但 3.5 代的 Flash 邏輯智商已經逼近上一代的 Pro。它在**影片分析、音訊逐字稿整理、網頁結構化資料擷取**上表現極佳，且輸出速度快如閃電，是目前市場上性價比極高的核心型號。</p>
+
+        <h3>Gemini 2.0 Flash-Lite <span class="tag tag-speed">極速自動化助手</span></h3>
+        <p><strong>定位：</strong> 專跑自動化流水線的基層員工。速度極快，費用極低，最適合綁定在後台系統做**即時的資料過濾、關鍵字打標籤、或是超高頻率的簡單對答**。</p>
+    </div>
+
+    <!-- SECTION 3: ANTHROPIC -->
+    <h2 class="brand-anthropic">🟠 3. Anthropic Claude 家族 —— 文筆最好、最富有人文情懷的文字大師</h2>
+    <p>由前 OpenAI 科學家創立。Claude 在全球白領圈聲譽極高，因為它的**文筆最自然、邏輯最像真人、不會有生硬的「AI 腔」**，是行銷、公關、寫作者的最愛。</p>
+    
+    <div class="brand-card card-anthropic">
+        <h3>Claude 4.7 Opus <span class="tag tag-heavy">首席文學與策略總監</span></h3>
+        <p><strong>定位：</strong> 頂級智慧大腦。智商極高、文筆細膩。擅長處理帶有複雜情感的文學創作、<strong>高度抽象的哲學與策略論證、大局觀的商業模式規劃</strong>。缺點是速度較慢、使用成本最高。</p>
+
+        <h3>Claude 4.6 Sonnet <span class="tag tag-balance">明星文案與網頁設計師</span></h3>
+        <p><strong>定位：</strong> 辦公室裡的黃金招牌。字尾 Sonnet 的意思是「十四行詩」。它在**行銷文案撰寫、撰寫高點閱率社群貼文、以及直接編寫「漂亮的網頁前端 UI 介面（HTML/CSS）」**的能力在市場上幾乎沒有對手。它是各大企業白領最愛不釋手的日常工具。</p>
+
+        <h3>Claude 4.5 Haiku <span class="tag tag-speed">極簡敏捷翻譯官</span></h3>
+        <p><strong>定位：</strong> 輕巧的文字實習生。字尾 Haiku 的意思是「俳句」。主打高速文字處理，適合用來做**超大批量的跨國郵件翻譯、基本語法校正、長文快速摘要重點**。</p>
+    </div>
+
+    <!-- SECTION 4: META & MICROSOFT -->
+    <h2 class="brand-meta">🔵 Meta Llama 家族 —— 全球最強的免費「開源」武林盟主</h2>
+    <p>Meta（Facebook 母公司）走的是完全不同的路線，他們不賣 API，而是把模型**免費開放（開源）**讓全世界下載。例如 <strong>Llama 3.3 (70B/405B)</strong>。這意味著如果公司重視<strong>資訊安全、不想把機密資料傳到微軟或 Google 的雲端</strong>，可以把 Llama 下載下來裝在公司內部的伺服器裡，做成完全私有、安全的企業內部 AI。</p>
+
+    <h2 class="brand-ms">🔴 Microsoft & 各家 AI Agent —— 擁有手腳的最新自動化大軍</h2>
+    <p>這不是用來聊天的，而是幫你「操作電腦」的最新科技（如 <strong>Microsoft Copilot Studio</strong>、<strong>OpenAI Atlas</strong>、獨立軟體 <strong>Lindy</strong>）。它們被歸類為 <strong>AI Agent（代理人）</strong>，能夠直接幫你**打開 Outlook 填寫郵件、登入公司的 ERP 系統撈資料、或是自動把報表轉存並發送到 Slack/Line 群組**，是終結重複性行政地獄的終極武器。</p>
+
+    <!-- 終極總整理表格 -->
+    <h2>五、 一張表總覽：各大模型最強職場定位</h2>
+    <p>早會結束後，如果忘記該用哪一個，直接對照這張表格就能光速選出正確的模型：</p>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>廠商</th>
+                    <th>輕量速度型（實習生）</th>
+                    <th>主力平衡型（資深專員）</th>
+                    <th>旗艦推理型（高階顧問）</th>
+                    <th>自動操作型（外勤特助）</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="highlight-text" style="color:var(--openai-color);">OpenAI</td>
+                    <td><strong>GPT-4o mini</strong><br>• 反應小於1秒<br>• 適合修錯字、簡單對答</td>
+                    <td><strong>GPT-4o</strong><br>• 萬能全對標<br>• 簡報、圖表、普通代碼</td>
+                    <td><strong>o1 / o3 / o3-pro</strong><br>• 後台深思熟慮<br>• 專治極難算式與法務漏洞</td>
+                    <td><strong>ChatGPT Atlas</strong><br>• 自動接管視窗<br>• 網頁自動化操作</td>
+                </tr>
+                <tr>
+                    <td class="highlight-text" style="color:var(--google-color);">Google</td>
+                    <td><strong>Gemini 2.0 Flash-Lite</strong><br>• 成本極低、速度狂飆<br>• 適合後台自動打標籤</td>
+                    <td><strong>Gemini 3.5 Flash</strong><br>• 性價比之王<br>• 處理多媒體與音訊逐字稿</td>
+                    <td><strong>Gemini 3.1 Pro</strong><br>• 200萬超長上下文<br>• 一次吞一整本書或長影片</td>
+                    <td><strong>Vertex AI Agent</strong><br>• 串接 Google 生態系<br>• 自動更新雲端表單</td>
+                </tr>
+                <tr>
+                    <td class="highlight-text" style="color:var(--anthropic-color);">Anthropic</td>
+                    <td><strong>Claude 4.5 Haiku</strong><br>• 輕巧敏捷<br>• 批量翻譯、長文摘錄</td>
+                    <td><strong>Claude 4.6 Sonnet</strong><br>• 行銷文案、寫Code首選<br>• 語氣最像真人、文筆極佳</td>
+                    <td><strong>Claude 4.7 Opus</strong><br>• 高級文學、哲學大腦<br>• 梳理複雜且抽象的策略</td>
+                    <td><strong>Computer Use / Cowork</strong><br>• 模擬人類滑鼠點擊<br>• 自動點螢幕按鈕</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 40px 0;">
+    <p style="text-align: center; font-weight: bold; color: #475569;">💡 結論：沒有最強的模型，只有最不會放對位置的主管。根據任務挑對型號，你就能成為辦公室的效率大師！</p>
+</div>
+
+</body>
+</html>
