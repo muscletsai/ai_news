@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辦公室輕鬆讀：AI 模型分類與演進指南</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+            --accent-color: #f0fdf4;
+            --accent-text: #166534;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-left: 5px solid var(--primary-color);
+            padding-left: 12px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #64748b;
+        }
+
+            .highlight-box p {
+                margin: 0;
+                font-weight: bold;
+            }
+
+        /* 表格樣式 */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .badge-blue {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-green {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-purple {
+            background-color: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .badge-orange {
+            background-color: #ffedd5;
+            color: #9a3412;
+        }
+
+        .version-tag {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🧠 讀懂 AI 模型：從「四大類別」到「三代演進」</h1>
+        </header>
+
+        <div class="highlight-box">
+            <p>💡 核心觀念：新 AI 模型發表，到底是什麼意思？</p>
+            <p style="font-weight: normal; margin-top: 10px; color: #475569;">
+                就像手機每年出新旗艦機（如 iPhone 15 到 16）一樣，當科技公司發表「新模型」，代表他們成功培養出一個「智商更高、讀書更多、思考更不容易出錯」的超級大腦。我們不需要背誦生硬的科技名詞，只要學會看懂分類和等級即可！
+            </p>
+        </div>
+
+        <!-- 表格一：四大類別 -->
+        <h2>📊 一、一眼看懂：現今 AI 模型的「四大職能大類」</h2>
+        <p>不管市場上的 AI 工具名稱多精緻，它們背後的核心大腦一定屬於以下四種辦公室職位之一：</p>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">AI 大腦大類</th>
+                        <th style="width: 20%;">對應的辦公室職位</th>
+                        <th style="width: 40%;">它能幫你做什麼？（日常應用）</th>
+                        <th style="width: 20%;">市面代表工具</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-blue">1. 文字大腦</span><br><small>(大語言模型 LLM)</small></td>
+                        <td><strong>文書與點子專家</strong></td>
+                        <td>撰寫郵件、長篇報告摘要、改商務錯字、活動企劃發想。</td>
+                        <td>早期的 ChatGPT</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">2. 視覺大腦</span><br><small>(影音與圖像模型)</small></td>
+                        <td><strong>平面視覺設計師</strong></td>
+                        <td>輸入文字直接生成簡報插圖、行銷海報、將模糊照片變清晰。</td>
+                        <td>Midjourney, DALL-E 3</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">3. 多模態大腦</span><br><small>(五官全能模型)</small></td>
+                        <td><strong>全方位高級特助</strong></td>
+                        <td>同時理解「看、聽、讀、寫」。可丟入開會白板照片直接轉成 Word 檔，或用極流利的語音與你即時對話。</td>
+                        <td>現今的 GPT-4o, Google Gemini</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-orange">4. 智能體大腦</span><br><small>(AI Agent 自動化)</small></td>
+                        <td><strong>自動化執行秘書</strong></td>
+                        <td>不只回答問題，還會動手做。給它一個目標（如：幫我訂車票並發信通知主管），它會自動串聯系統幫你做到好。</td>
+                        <td>2026年最新潮流技術</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 表格二：三代演進 -->
+        <h2>📈 二、時間軸對比：AI 模型的「三代智商演進與差異」</h2>
+        <p>了解 AI 是如何隨著時間變聰明的，您就會明白為什麼「最新的模型」在工作上更好用、更值得信賴：</p>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>演進階段</th>
+                        <th>技術世代</th>
+                        <th>思考特點（大腦反應）</th>
+                        <th>致命缺點</th>
+                        <th>辦公室最佳應用情境</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="version-tag">第一代<br><small>(2022年以前)</small></td>
+                        <td><strong>資料庫搬運工</strong></td>
+                        <td>死板的一問一答。只會從既有的資料庫撈出標準答案，不會自我延伸。</td>
+                        <td>毫無創造力，無法寫出有溫度的商務信件。</td>
+                        <td>單純的關鍵字搜尋、死板的數據中翻英。</td>
+                    </tr>
+                    <tr>
+                        <td class="version-tag">第二代<br><small>(2023 - 2024年)</small></td>
+                        <td><strong>很會聊天的文科生</strong></td>
+                        <td><strong>「秒讀秒回」</strong>。讀過大半個網路知識，中文極佳，非常擅長長篇大論、編故事與寫文案。</td>
+                        <td><strong>一本正經地胡說八道</strong>（有幻覺）。不懂的事情會自己編答案，人類必須嚴格檢查。</td>
+                        <td>寫企劃案草稿、腦力激盪想點子、潤飾郵件語氣。</td>
+                    </tr>
+                    <tr>
+                        <td class="version-tag">第三代<br><small>(2025 - 2026最新)</small></td>
+                        <td><strong>會先思考的理科研究生</strong></td>
+                        <td><strong>「先想再答」</strong>。遇到複雜問題會默默思考 5-10 秒，在腦中自我列算式、自我糾錯，確認正確才回答。</td>
+                        <td>回答需要等待幾秒鐘，且極度高智商的模型費用較昂貴。</td>
+                        <td><strong>分析複雜 Excel 財報、抓出合約法律漏洞</strong>、撰寫完全無錯的程式碼。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 三、命名密碼小祕訣 -->
+        <h2>🏷️ 三、補充：辦公室必學的「模型名字縮寫密碼」</h2>
+        <p>以後在新聞或軟體選單看到奇怪的名字，直接套用這個公式：<code>【廠商】 + 【代數】 + 【功能】 + 【衣服尺碼】</code></p>
+        <ul>
+            <li><strong>看數字（代數）</strong>：數字越大越聰明。如 <code>GPT-4</code> ➔ <code>GPT-5</code>。</li>
+            <li><strong>看英文字母（功能）</strong>：後面加了 <code>"o"</code> 代表反應極快、可看可聽的全能款；加了 <code>"o1" / "o3"</code> 代表會深思熟慮的推理款。</li>
+            <li>
+                <strong>看後綴詞（衣服尺碼）</strong>：
+                <ul>
+                    <li><code>Ultra / Large / Opus</code> (XL號)：最聰明、最慢、最貴，適合大合約或重要決策。</li>
+                    <li><code>Pro / Sonnet</code> (L號)：性價比最高、智商與速度平衡，日常辦公室首選。</li>
+                    <li><code>Mini / Flash / Haiku</code> (S號)：極快、極便宜，但智商稍低，適合大量改錯字或郵件自動分類。</li>
+                </ul>
+            </li>
+        </ul>
+
+        <footer>
+            <p>💡 實用小建議：跟 AI 協作就像帶實習生，它給的答案，身為專業前輩的您記得還是要檢查一下喔！</p>
+            <p>© 2026 辦公室 AI 輕鬆看通識指南</p>
+        </footer>
+    </div>
+
+</body>
+</html>
