@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>羽球上場順序管理 V5</title>
+<style>
+body{
+    margin:0;
+    font-family:"Microsoft JhengHei",Arial,sans-serif;
+    background:#eef2f7;
+    color:#1f2937;
+}
+.header{
+    height:58px;
+    background:#1f2937;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    box-sizing:border-box;
+}
+.header h1{
+    font-size:22px;
+    margin:0;
+}
+.header .btns{
+    display:flex;
+    gap:10px;
+}
+button{
+    border:0;
+    border-radius:8px;
+    padding:8px 14px;
+    cursor:pointer;
+    font-weight:bold;
+    background:#2563eb;
+    color:white;
+}
+button.secondary{ background:#64748b; }
+button.danger{ background:#dc2626; }
+button.success{ background:#16a34a; }
+button.finish{
+    background:#f97316;
+    width:100%;
+    margin-top:8px;
+}
+.main{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:14px;
+    padding:14px;
+    box-sizing:border-box;
+    height:calc(100vh - 58px);
+}
+.panel{
+    background:white;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    padding:14px;
+    box-sizing:border-box;
+    overflow:auto;
+}
+.panel-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.player-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.player-card{
+    border:2px solid #d1d5db;
+    border-left-width:12px;
+    background:#f9fafb;
+    border-radius:12px;
+    padding:10px;
+    cursor:grab;
+    user-select:none;
+    font-weight:bold;
+    font-size:var(--player-font-size, 18px);
+}
+.player-card:active{ cursor:grabbing; }
+.player-name{
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+.gender-tag{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:24px;
+    height:24px;
+    border-radius:50%;
+    background:#e5e7eb;
+    color:#111827;
+    font-size:.75em;
+    font-weight:bold;
+    padding:0 6px;
+}
+.player-meta{
+    font-size:.75em;
+    color:#4b5563;
+    margin-top:4px;
+    font-weight:bold;
+}
+.play-count{
+    margin-left:auto;
+    background:#111827;
+    color:white;
+    border-radius:999px;
+    padding:2px 7px;
+    font-size:.72em;
+    font-weight:bold;
+}
+.stats-bar{
+    display:none;
+    background:white;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    padding:10px 14px;
+    box-sizing:border-box;
+}
+.stats-title{
+    font-weight:bold;
+    margin-bottom:8px;
+}
+.stats-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+.stats-item{
+    border:1px solid #cbd5e1;
+    border-left-width:8px;
+    border-radius:999px;
+    padding:6px 10px;
+    background:#f8fafc;
+    font-weight:bold;
+}
+.right-area{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    overflow:hidden;
+}
+.section{
+    background:white;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    padding:14px;
+    box-sizing:border-box;
+}
+.court-grid{
+    display:grid;
+    gap:12px;
+}
+.court-card{
+    border:2px solid #cbd5e1;
+    border-radius:14px;
+    background:#f8fafc;
+    padding:12px;
+    min-height:170px;
+    box-sizing:border-box;
+}
+.court-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+    color:#0f172a;
+}
+.slot-area{
+    min-height:96px;
+    border:2px dashed #cbd5e1;
+    border-radius:10px;
+    padding:8px;
+    background:white;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+.queue-area{
+    display:grid;
+    gap:12px;
+}
+.queue-card{
+    border:2px solid #cbd5e1;
+    border-radius:14px;
+    background:#f8fafc;
+    padding:12px;
+    min-height:190px;
+}
+.queue-list{
+    min-height:120px;
+    border:2px dashed #cbd5e1;
+    border-radius:10px;
+    padding:8px;
+    background:white;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+.empty-hint{
+    color:#94a3b8;
+    font-weight:bold;
+    text-align:center;
+    padding:18px 0;
+}
+.modal-mask{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:99;
+}
+.modal{
+    width:380px;
+    max-height:88vh;
+    overflow:auto;
+    background:white;
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 12px 40px rgba(0,0,0,.25);
+}
+.modal h2{
+    margin:0 0 14px;
+    font-size:22px;
+}
+.form-row{
+    margin-bottom:12px;
+}
+.form-row label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+.form-row input,.form-row select,.form-row textarea{
+    width:100%;
+    box-sizing:border-box;
+    padding:9px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    font-size:16px;
+}
+.help{
+    color:#64748b;
+    font-size:13px;
+    line-height:1.5;
+    margin-top:5px;
+}
+.modal-actions{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    margin-top:16px;
+}
+.modal-actions .right{
+    margin-left:auto;
+    display:flex;
+    gap:8px;
+}
+.level-preview{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+.level-chip{
+    padding:6px 10px;
+    border-radius:999px;
+    color:white;
+    font-weight:bold;
+    font-size:14px;
+}
+.file-input{
+    display:none;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>羽球上場順序管理 <span style="font-size:14px;color:#cbd5e1;">V5｜場次顯示在人員卡片</span></h1>
+    <div class="btns">
+        <button onclick="openSettingModal()">⚙ 設定</button>
+        <button class="success" onclick="exportPlayers()">儲存人員清單</button>
+        <button class="secondary" onclick="document.getElementById('importFile').click()">載入人員清單</button>
+        <button onclick="openPlayerModal()">＋新增人員</button>
+        <input id="importFile" class="file-input" type="file" accept=".json" onchange="importPlayers(event)">
+    </div>
+</div>
+
+<div class="main">
+    <div class="panel">
+        <div class="panel-title">待上場人員</div>
+        <div id="playerList" class="player-list"></div>
+    </div>
+
+    <div class="right-area">
+        <div class="section">
+            <div class="panel-title">目前比賽中 <span style="font-size:13px;color:#64748b;">比賽中人員按右鍵可重新播報</span></div>
+            <div id="courtGrid" class="court-grid"></div>
+        </div>
+
+        <div class="section" style="flex:1;overflow:auto;">
+            <div class="panel-title">排隊清單</div>
+            <div id="queueArea" class="queue-area"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 人員維護視窗 -->
+<div id="playerModal" class="modal-mask">
+    <div class="modal">
+        <h2>人員資料維護</h2>
+        <input type="hidden" id="editPlayerId">
+
+        <div class="form-row">
+            <label>姓名</label>
+            <input id="playerName" placeholder="例如：王小明">
+        </div>
+
+        <div class="form-row">
+            <label>性別</label>
+            <select id="playerGender">
+                <option value="男">男 ♂</option>
+                <option value="女">女 ♀</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>程度</label>
+            <select id="playerLevel"></select>
+            <div class="help">程度會自動對應顏色，畫面只顯示顏色與姓名、性別。</div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="danger" onclick="deletePlayer()">刪除</button>
+            <div class="right">
+                <button class="secondary" onclick="closePlayerModal()">取消</button>
+                <button onclick="savePlayer()">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 系統設定視窗 -->
+<div id="settingModal" class="modal-mask">
+    <div class="modal">
+        <h2>系統設定</h2>
+
+        <div class="form-row">
+            <label>場地數量</label>
+            <select id="courtCount">
+                <option value="1">1 個場地</option>
+                <option value="2">2 個場地</option>
+                <option value="3" selected>3 個場地</option>
+                <option value="4">4 個場地</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>每場人數</label>
+            <select id="playersPerCourt">
+                <option value="2">2 人</option>
+                <option value="4" selected>4 人</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>人員字體大小</label>
+            <select id="fontSize">
+                <option value="16px">小</option>
+                <option value="18px" selected>中</option>
+                <option value="22px">大</option>
+                <option value="26px">特大</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>語音播報</label>
+            <select id="voiceEnabled">
+                <option value="Y" selected>開啟</option>
+                <option value="N">關閉</option>
+            </select>
+            <div class="help">按下「結束」後，若有新上場人員，會自動播報場地與人名。</div>
+        </div>
+
+        <div class="form-row">
+            <label>語音速度</label>
+            <select id="voiceRate">
+                <option value="0.8">慢</option>
+                <option value="1" selected>正常</option>
+                <option value="1.2">快</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>上場次數記錄</label>
+            <select id="countEnabled">
+                <option value="Y">開啟</option>
+                <option value="N" selected>關閉</option>
+            </select>
+            <div class="help">開啟後，按下「結束」時，該場地剛完成比賽的人員上場次數會 +1，並顯示在上方統計列與人員卡片。</div>
+        </div>
+
+        <div class="form-row">
+            <label>程度顏色設定</label>
+            <div class="help">目前版本先固定三種程度，後續可再增加自訂程度。</div>
+            <div style="display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;margin-top:8px;">
+                <b>初級</b><input type="color" id="levelColor_初級" value="#22c55e">
+                <b>中級</b><input type="color" id="levelColor_中級" value="#3b82f6">
+                <b>高級</b><input type="color" id="levelColor_高級" value="#ef4444">
+            </div>
+            <div id="levelPreview" class="level-preview"></div>
+        </div>
+
+        <div class="modal-actions">
+            <div class="right">
+                <button class="secondary" onclick="closeSettingModal()">取消</button>
+                <button onclick="saveSetting()">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let levelColors = {
+    "初級":"#22c55e",
+    "中級":"#3b82f6",
+    "高級":"#ef4444"
+};
+
+let players = [
+    {id:1,name:"王曉明",gender:"男",level:"高級",playCount:0},
+    {id:2,name:"陳小華",gender:"女",level:"中級",playCount:0},
+    {id:3,name:"林小美",gender:"女",level:"初級",playCount:0},
+    {id:4,name:"張大偉",gender:"男",level:"中級",playCount:0},
+    {id:5,name:"李小安",gender:"男",level:"高級",playCount:0},
+    {id:6,name:"周小君",gender:"女",level:"高級",playCount:0},
+    {id:7,name:"吳小明",gender:"男",level:"中級",playCount:0},
+    {id:8,name:"黃小華",gender:"女",level:"初級",playCount:0}
+];
+
+let waitingPlayers = [1,2,3,4,5,6,7,8];
+let courts = [];
+let courtCount = 2;
+let playersPerCourt = 4;
+let voiceEnabled = true;
+let voiceRate = 1;
+let countEnabled = false;
+
+function initCourts(){
+    courts = [];
+    for(let i=0;i<courtCount;i++){
+        courts.push({playing:[], queue:[]});
+    }
+}
+
+function genderSymbol(gender){
+    return gender === "男" ? "♂" : "♀";
+}
+
+function getPlayer(id){
+    return players.find(p => p.id == id);
+}
+
+function getLevelColor(level){
+    return levelColors[level] || "#94a3b8";
+}
+
+function getCountText(player){
+    return countEnabled ? ` ${player.playCount || 0}場` : "";
+}
+
+function createPlayerCard(player, source, courtIndex){
+    const div = document.createElement("div");
+    div.className = "player-card";
+    div.draggable = true;
+    div.dataset.id = player.id;
+    div.style.borderLeftColor = getLevelColor(player.level);
+    div.title = source && source.indexOf("playing") === 0 ? "按右鍵重新播報" : player.level;
+
+    div.innerHTML = `
+        <div class="player-name">
+            <span>${player.name}</span>
+            <span class="gender-tag">${genderSymbol(player.gender)}${getCountText(player)}</span>
+        </div>
+        <div class="player-meta">${player.gender}${getCountText(player)}</div>
+    `;
+
+    div.ondragstart = e => {
+        e.dataTransfer.setData("playerId", player.id);
+        e.dataTransfer.setData("source", source);
+    };
+
+    div.ondblclick = () => openPlayerModal(player.id);
+
+    if(source && source.indexOf("playing") === 0){
+        div.oncontextmenu = e => {
+            e.preventDefault();
+            announceSinglePlayer(courtIndex, player.id);
+        };
+    }
+
+    return div;
+}
+
+function render(){
+    refreshPlayerLevelOptions();
+    renderPlayers();
+    renderCourts();
+    renderQueues();
+}
+
+function renderPlayers(){
+    const list = document.getElementById("playerList");
+    list.innerHTML = "";
+    waitingPlayers.forEach(id => {
+        const p = getPlayer(id);
+        if(p) list.appendChild(createPlayerCard(p,"waiting"));
+    });
+    if(waitingPlayers.length === 0){
+        list.innerHTML = `<div class="empty-hint">目前沒有待上場人員</div>`;
+    }
+}
+
+function renderCourts(){
+    const grid = document.getElementById("courtGrid");
+    grid.innerHTML = "";
+    grid.style.gridTemplateColumns = `repeat(${courtCount}, minmax(210px, 1fr))`;
+
+    courts.forEach((court,index)=>{
+        const card = document.createElement("div");
+        card.className = "court-card";
+        card.innerHTML = `
+            <div class="court-title">場地 ${index+1}</div>
+            <div class="slot-area" data-court="${index}" data-target="playing"></div>
+            <button class="finish" onclick="finishCourt(${index})">結束</button>
+        `;
+        grid.appendChild(card);
+
+        const slot = card.querySelector(".slot-area");
+        bindDrop(slot,index,"playing");
+
+        court.playing.forEach(id=>{
+            const p = getPlayer(id);
+            if(p) slot.appendChild(createPlayerCard(p,"playing-" + index, index));
+        });
+
+        if(court.playing.length === 0){
+            slot.innerHTML = `<div class="empty-hint">拖曳人員到此</div>`;
+        }
+    });
+}
+
+function renderQueues(){
+    const area = document.getElementById("queueArea");
+    area.innerHTML = "";
+    area.style.gridTemplateColumns = `repeat(${courtCount}, minmax(210px, 1fr))`;
+
+    courts.forEach((court,index)=>{
+        const card = document.createElement("div");
+        card.className = "queue-card";
+        card.innerHTML = `
+            <div class="court-title">場地 ${index+1} 排隊</div>
+            <div class="queue-list" data-court="${index}" data-target="queue"></div>
+        `;
+        area.appendChild(card);
+
+        const q = card.querySelector(".queue-list");
+        bindDrop(q,index,"queue");
+
+        court.queue.forEach((id,idx)=>{
+            const p = getPlayer(id);
+            if(p){
+                const wrapper = createPlayerCard(p,"queue-" + index);
+                wrapper.querySelector(".player-name").innerHTML = `
+                    <span>${idx+1}. ${p.name}</span>
+                    <span class="gender-tag">${genderSymbol(p.gender)}${getCountText(p)}</span>
+                `;
+                wrapper.querySelector(".player-meta").textContent = `${p.gender}${getCountText(p)}`;
+                q.appendChild(wrapper);
+            }
+        });
+
+        if(court.queue.length === 0){
+            q.innerHTML = `<div class="empty-hint">拖曳人員到此排隊</div>`;
+        }
+    });
+}
+
+function bindDrop(el,courtIndex,target){
+    el.ondragover = e => e.preventDefault();
+    el.ondrop = e => {
+        e.preventDefault();
+        const playerId = parseInt(e.dataTransfer.getData("playerId"));
+        movePlayerTo(playerId,courtIndex,target);
+    };
+}
+
+function removePlayerFromAll(playerId){
+    waitingPlayers = waitingPlayers.filter(id => id !== playerId);
+    courts.forEach(c=>{
+        c.playing = c.playing.filter(id => id !== playerId);
+        c.queue = c.queue.filter(id => id !== playerId);
+    });
+}
+
+function movePlayerTo(playerId,courtIndex,target){
+    removePlayerFromAll(playerId);
+
+    if(target === "playing"){
+        if(courts[courtIndex].playing.length < playersPerCourt){
+            courts[courtIndex].playing.push(playerId);
+        }else{
+            courts[courtIndex].queue.push(playerId);
+            alert("此場地已滿，已自動加入該場地排隊清單");
+        }
+    }else{
+        courts[courtIndex].queue.push(playerId);
+    }
+
+    render();
+}
+
+function finishCourt(finishedCourtIndex){
+    const finishedCourt = courts[finishedCourtIndex];
+    const finishedPlayers = finishedCourt.playing.slice();
+
+    if(countEnabled){
+        finishedPlayers.forEach(id=>{
+            const p = getPlayer(id);
+            if(p) p.playCount = (p.playCount || 0) + 1;
+        });
+    }
+
+    finishedPlayers.forEach(id=>{
+        if(!waitingPlayers.includes(id)){
+            waitingPlayers.push(id);
+        }
+    });
+    finishedCourt.playing = [];
+
+    const nextPlayers = courts[0].queue.splice(0, playersPerCourt);
+    finishedCourt.playing = nextPlayers;
+
+    shiftQueuesForward();
+
+    render();
+
+    if(nextPlayers.length > 0){
+        announceCourtPlayers(finishedCourtIndex, nextPlayers);
+    }
+}
+
+function shiftQueuesForward(){
+    for(let i=0; i<courtCount-1; i++){
+        courts[i].queue = courts[i+1].queue;
+    }
+    courts[courtCount-1].queue = [];
+}
+
+function speakText(text){
+    if(!voiceEnabled || !("speechSynthesis" in window)) return;
+
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "zh-TW";
+    msg.rate = voiceRate;
+    msg.pitch = 1;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(msg);
+}
+
+function announceCourtPlayers(courtIndex, playerIds){
+    const names = playerIds
+        .map(id => getPlayer(id))
+        .filter(Boolean)
+        .map(p => p.name)
+        .join("、");
+
+    if(!names) return;
+
+    speakText(`請注意，場地${courtIndex + 1}，下一場上場人員，${names}`);
+}
+
+function announceSinglePlayer(courtIndex, playerId){
+    const p = getPlayer(playerId);
+    if(!p) return;
+    speakText(`${p.name}，請到場地${courtIndex + 1}`);
+}
+
+function refreshPlayerLevelOptions(){
+    const select = document.getElementById("playerLevel");
+    const current = select.value;
+    select.innerHTML = "";
+    Object.keys(levelColors).forEach(level=>{
+        const opt = document.createElement("option");
+        opt.value = level;
+        opt.textContent = level;
+        select.appendChild(opt);
+    });
+    if(current && levelColors[current]) select.value = current;
+}
+
+function openPlayerModal(id){
+    refreshPlayerLevelOptions();
+    document.getElementById("playerModal").style.display = "flex";
+
+    if(id){
+        const p = getPlayer(id);
+        document.getElementById("editPlayerId").value = p.id;
+        document.getElementById("playerName").value = p.name;
+        document.getElementById("playerGender").value = p.gender;
+        document.getElementById("playerLevel").value = p.level;
+    }else{
+        document.getElementById("editPlayerId").value = "";
+        document.getElementById("playerName").value = "";
+        document.getElementById("playerGender").value = "男";
+        document.getElementById("playerLevel").value = "初級";
+    }
+}
+
+function closePlayerModal(){
+    document.getElementById("playerModal").style.display = "none";
+}
+
+function savePlayer(){
+    const id = document.getElementById("editPlayerId").value;
+    const name = document.getElementById("playerName").value.trim();
+    const gender = document.getElementById("playerGender").value;
+    const level = document.getElementById("playerLevel").value;
+
+    if(!name){
+        alert("請輸入姓名");
+        return;
+    }
+
+    if(id){
+        const p = getPlayer(id);
+        p.name = name;
+        p.gender = gender;
+        p.level = level;
+        if(typeof p.playCount !== "number") p.playCount = 0;
+    }else{
+        const newId = Date.now();
+        players.push({id:newId,name,gender,level,playCount:0});
+        waitingPlayers.push(newId);
+    }
+
+    closePlayerModal();
+    render();
+}
+
+function deletePlayer(){
+    const id = parseInt(document.getElementById("editPlayerId").value);
+    if(!id){
+        closePlayerModal();
+        return;
+    }
+
+    if(confirm("確定刪除此人員？")){
+        players = players.filter(p => p.id !== id);
+        removePlayerFromAll(id);
+        closePlayerModal();
+        render();
+    }
+}
+
+function openSettingModal(){
+    document.getElementById("settingModal").style.display = "flex";
+    document.getElementById("courtCount").value = courtCount;
+    document.getElementById("playersPerCourt").value = playersPerCourt;
+
+    const voiceEnabledEl = document.getElementById("voiceEnabled");
+    const voiceRateEl = document.getElementById("voiceRate");
+    const countEnabledEl = document.getElementById("countEnabled");
+    if(voiceEnabledEl) voiceEnabledEl.value = voiceEnabled ? "Y" : "N";
+    if(voiceRateEl) voiceRateEl.value = String(voiceRate);
+    if(countEnabledEl) countEnabledEl.value = countEnabled ? "Y" : "N";
+
+    Object.keys(levelColors).forEach(level=>{
+        const input = document.getElementById("levelColor_" + level);
+        if(input) input.value = levelColors[level];
+    });
+    renderLevelPreview();
+}
+
+function closeSettingModal(){
+    document.getElementById("settingModal").style.display = "none";
+}
+
+function renderLevelPreview(){
+    const preview = document.getElementById("levelPreview");
+    if(!preview) return;
+    preview.innerHTML = "";
+    Object.keys(levelColors).forEach(level=>{
+        const chip = document.createElement("span");
+        chip.className = "level-chip";
+        chip.style.background = levelColors[level];
+        chip.textContent = level;
+        preview.appendChild(chip);
+    });
+}
+
+function saveSetting(){
+    const newCourtCount = parseInt(document.getElementById("courtCount").value);
+    playersPerCourt = parseInt(document.getElementById("playersPerCourt").value);
+
+    document.documentElement.style.setProperty(
+        "--player-font-size",
+        document.getElementById("fontSize").value
+    );
+
+    const voiceEnabledEl = document.getElementById("voiceEnabled");
+    const voiceRateEl = document.getElementById("voiceRate");
+    const countEnabledEl = document.getElementById("countEnabled");
+    if(voiceEnabledEl) voiceEnabled = voiceEnabledEl.value === "Y";
+    if(voiceRateEl) voiceRate = parseFloat(voiceRateEl.value);
+    if(countEnabledEl) countEnabled = countEnabledEl.value === "Y";
+
+    Object.keys(levelColors).forEach(level=>{
+        const input = document.getElementById("levelColor_" + level);
+        if(input) levelColors[level] = input.value;
+    });
+
+    if(newCourtCount !== courtCount){
+        let allIds = [];
+        courts.forEach(c=>{
+            allIds = allIds.concat(c.playing).concat(c.queue);
+        });
+        waitingPlayers = waitingPlayers.concat(allIds);
+        courtCount = newCourtCount;
+        initCourts();
+    }
+
+    closeSettingModal();
+    render();
+}
+
+function exportPlayers(){
+    const data = {
+        version:"1.3-V5",
+        exportedAt:new Date().toISOString(),
+        levelColors:levelColors,
+        countEnabled:countEnabled,
+        players:players.map(p=>({
+            id:p.id,
+            name:p.name,
+            gender:p.gender,
+            level:p.level,
+            playCount:p.playCount || 0
+        }))
+    };
+
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "badminton_players_v5.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function importPlayers(event){
+    const file = event.target.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        try{
+            const data = JSON.parse(e.target.result);
+            if(!Array.isArray(data.players)){
+                alert("檔案格式錯誤：找不到 players 清單");
+                return;
+            }
+
+            if(data.levelColors){
+                levelColors = data.levelColors;
+            }
+
+            if(typeof data.countEnabled === "boolean"){
+                countEnabled = data.countEnabled;
+            }
+
+            players = data.players.map((p,idx)=>({
+                id:p.id || Date.now() + idx,
+                name:p.name || "未命名",
+                gender:p.gender === "女" ? "女" : "男",
+                level:p.level && levelColors[p.level] ? p.level : "初級",
+                playCount:typeof p.playCount === "number" ? p.playCount : 0
+            }));
+
+            waitingPlayers = players.map(p=>p.id);
+            initCourts();
+            render();
+            alert("人員清單已載入");
+        }catch(err){
+            alert("載入失敗，請確認是否為正確 JSON 檔案");
+        }finally{
+            event.target.value = "";
+        }
+    };
+    reader.readAsText(file, "UTF-8");
+}
+
+initCourts();
+render();
+</script>
+</body>
+</html>
