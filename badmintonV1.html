@@ -2,7 +2,8 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<title>羽球上場順序管理 V6</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>羽球上場順序管理 V7</title>
 <style>
 body{
     margin:0;
@@ -11,14 +12,16 @@ body{
     color:#1f2937;
 }
 .header{
-    height:58px;
+    min-height:58px;
     background:#1f2937;
     color:white;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 18px;
+    padding:10px 18px;
     box-sizing:border-box;
+    gap:10px;
+    flex-wrap:wrap;
 }
 .header h1{
     font-size:22px;
@@ -31,6 +34,7 @@ body{
 .header .btns{
     display:flex;
     gap:10px;
+    flex-wrap:wrap;
 }
 button{
     border:0;
@@ -40,6 +44,7 @@ button{
     font-weight:bold;
     background:#2563eb;
     color:white;
+    touch-action:manipulation;
 }
 button.secondary{ background:#64748b; }
 button.danger{ background:#dc2626; }
@@ -49,13 +54,18 @@ button.finish{
     width:100%;
     margin-top:8px;
 }
+button.sound{
+    background:#0f766e;
+    padding:5px 9px;
+    font-size:14px;
+}
 .main{
     display:grid;
     grid-template-columns:280px 1fr;
     gap:14px;
     padding:14px;
     box-sizing:border-box;
-    height:calc(100vh - 58px);
+    height:calc(100vh - 78px);
 }
 .panel,.section{
     background:white;
@@ -74,6 +84,22 @@ button.finish{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:8px;
+}
+.mobile-hint{
+    font-size:13px;
+    color:#64748b;
+    line-height:1.4;
+}
+.selected-info{
+    display:none;
+    background:#fff7ed;
+    border:2px solid #fdba74;
+    border-radius:12px;
+    padding:8px 10px;
+    margin-bottom:10px;
+    font-weight:bold;
+    color:#9a3412;
 }
 .player-list{
     display:flex;
@@ -90,6 +116,11 @@ button.finish{
     user-select:none;
     font-weight:bold;
     font-size:var(--player-font-size, 18px);
+    touch-action:manipulation;
+}
+.player-card.selected{
+    outline:4px solid #f97316;
+    background:#fff7ed;
 }
 .player-card:active{ cursor:grabbing; }
 .player-name{
@@ -140,6 +171,9 @@ button.finish{
     font-weight:bold;
     margin-bottom:10px;
     color:#0f172a;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 .slot-area{
     min-height:96px;
@@ -150,6 +184,11 @@ button.finish{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:8px;
+}
+.slot-area.tap-target,
+.queue-list.tap-target{
+    border-color:#f97316;
+    background:#fff7ed;
 }
 .queue-area{
     display:grid;
@@ -186,9 +225,12 @@ button.finish{
     align-items:center;
     justify-content:center;
     z-index:99;
+    padding:12px;
+    box-sizing:border-box;
 }
 .modal{
     width:400px;
+    max-width:100%;
     max-height:88vh;
     overflow:auto;
     background:white;
@@ -211,7 +253,7 @@ button.finish{
 .form-row input,.form-row select{
     width:100%;
     box-sizing:border-box;
-    padding:9px;
+    padding:10px;
     border:1px solid #cbd5e1;
     border-radius:8px;
     font-size:16px;
@@ -254,12 +296,34 @@ button.finish{
     margin-bottom:8px;
 }
 .file-input{ display:none; }
+
+@media (max-width: 900px){
+    .main{
+        grid-template-columns:1fr;
+        height:auto;
+    }
+    .right-area{
+        overflow:visible;
+    }
+    .court-grid,.queue-area{
+        grid-template-columns:1fr !important;
+    }
+    .slot-area{
+        grid-template-columns:1fr;
+    }
+    .header h1{
+        font-size:19px;
+    }
+    .header .btns button{
+        padding:8px 10px;
+    }
+}
 </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>羽球上場順序管理 <span class="version">V6｜可自訂場地名稱</span></h1>
+    <h1>羽球上場順序管理 <span class="version">V7｜手機點選模式</span></h1>
     <div class="btns">
         <button onclick="openSettingModal()">⚙ 設定</button>
         <button class="success" onclick="exportPlayers()">儲存人員清單</button>
@@ -272,12 +336,15 @@ button.finish{
 <div class="main">
     <div class="panel">
         <div class="panel-title">待上場人員</div>
+        <div id="selectedInfo" class="selected-info"></div>
+        <div class="mobile-hint">手機操作：先點人員，再點右側場地或排隊區。桌機仍可拖曳。</div>
+        <br>
         <div id="playerList" class="player-list"></div>
     </div>
 
     <div class="right-area">
         <div class="section">
-            <div class="panel-title">目前比賽中 <span style="font-size:13px;color:#64748b;">右鍵人員或場地可重新播報</span></div>
+            <div class="panel-title">目前比賽中 <span style="font-size:13px;color:#64748b;">點 🔊 可播報整個場地</span></div>
             <div id="courtGrid" class="court-grid"></div>
         </div>
 
@@ -368,7 +435,6 @@ button.finish{
                 <option value="Y" selected>開啟</option>
                 <option value="N">關閉</option>
             </select>
-            <div class="help">按下「結束」後，若有新上場人員，會自動播報自訂場地名稱。</div>
         </div>
 
         <div class="form-row">
@@ -386,7 +452,6 @@ button.finish{
                 <option value="Y">開啟</option>
                 <option value="N" selected>關閉</option>
             </select>
-            <div class="help">開啟後，按下「結束」時，該場地剛完成比賽的人員上場次數會 +1。</div>
         </div>
 
         <div class="form-row">
@@ -423,12 +488,13 @@ let players = [
 
 let waitingPlayers = [1,2,3,4,5,6,7,8];
 let courts = [];
-let courtCount = 3;
+let courtCount = 2;
 let courtNames = ["1","2","3","4","5","6"];
 let playersPerCourt = 4;
 let voiceEnabled = true;
 let voiceRate = 1;
 let countEnabled = false;
+let selectedPlayerId = null;
 
 function initCourts(){
     courts = [];
@@ -444,9 +510,31 @@ function getPlayer(id){ return players.find(p => p.id == id); }
 function getLevelColor(level){ return levelColors[level] || "#94a3b8"; }
 function getCountText(player){ return countEnabled ? ` ${player.playCount || 0}場` : ""; }
 
+function selectPlayer(playerId){
+    selectedPlayerId = selectedPlayerId === playerId ? null : playerId;
+    render();
+}
+
+function updateSelectedInfo(){
+    const box = document.getElementById("selectedInfo");
+    if(!selectedPlayerId){
+        box.style.display = "none";
+        box.textContent = "";
+        return;
+    }
+    const p = getPlayer(selectedPlayerId);
+    if(!p){
+        selectedPlayerId = null;
+        box.style.display = "none";
+        return;
+    }
+    box.style.display = "block";
+    box.textContent = `已選取：${p.name}，請點右側場地或排隊區放入`;
+}
+
 function createPlayerCard(player, source, courtIndex){
     const div = document.createElement("div");
-    div.className = "player-card";
+    div.className = "player-card" + (selectedPlayerId === player.id ? " selected" : "");
     div.draggable = true;
     div.dataset.id = player.id;
     div.style.borderLeftColor = getLevelColor(player.level);
@@ -465,7 +553,15 @@ function createPlayerCard(player, source, courtIndex){
         e.dataTransfer.setData("source", source);
     };
 
-    div.ondblclick = () => openPlayerModal(player.id);
+    div.onclick = e => {
+        e.stopPropagation();
+        selectPlayer(player.id);
+    };
+
+    div.ondblclick = e => {
+        e.stopPropagation();
+        openPlayerModal(player.id);
+    };
 
     if(source && source.indexOf("playing") === 0){
         div.oncontextmenu = e => {
@@ -478,6 +574,7 @@ function createPlayerCard(player, source, courtIndex){
 
 function render(){
     refreshPlayerLevelOptions();
+    updateSelectedInfo();
     renderPlayers();
     renderCourts();
     renderQueues();
@@ -506,21 +603,28 @@ function renderCourts(){
             if(court.playing.length > 0) announceCourtPlayers(index, court.playing);
         };
         card.innerHTML = `
-            <div class="court-title">${getCourtName(index)}</div>
-            <div class="slot-area" data-court="${index}" data-target="playing"></div>
+            <div class="court-title">
+                <span>${getCourtName(index)}</span>
+                <button class="sound" onclick="event.stopPropagation(); announceCourtPlayers(${index}, courts[${index}].playing)">🔊</button>
+            </div>
+            <div class="slot-area ${selectedPlayerId ? 'tap-target' : ''}" data-court="${index}" data-target="playing"></div>
             <button class="finish" onclick="finishCourt(${index})">結束</button>
         `;
         grid.appendChild(card);
 
         const slot = card.querySelector(".slot-area");
         bindDrop(slot,index,"playing");
+        slot.onclick = e => {
+            e.stopPropagation();
+            if(selectedPlayerId) movePlayerTo(selectedPlayerId,index,"playing");
+        };
 
         court.playing.forEach(id=>{
             const p = getPlayer(id);
             if(p) slot.appendChild(createPlayerCard(p,"playing-" + index, index));
         });
 
-        if(court.playing.length === 0) slot.innerHTML = `<div class="empty-hint">拖曳人員到此</div>`;
+        if(court.playing.length === 0) slot.innerHTML = `<div class="empty-hint">拖曳或點選人員到此</div>`;
     });
 }
 
@@ -534,12 +638,16 @@ function renderQueues(){
         card.className = "queue-card";
         card.innerHTML = `
             <div class="court-title">${getCourtName(index)} 排隊</div>
-            <div class="queue-list" data-court="${index}" data-target="queue"></div>
+            <div class="queue-list ${selectedPlayerId ? 'tap-target' : ''}" data-court="${index}" data-target="queue"></div>
         `;
         area.appendChild(card);
 
         const q = card.querySelector(".queue-list");
         bindDrop(q,index,"queue");
+        q.onclick = e => {
+            e.stopPropagation();
+            if(selectedPlayerId) movePlayerTo(selectedPlayerId,index,"queue");
+        };
 
         court.queue.forEach((id,idx)=>{
             const p = getPlayer(id);
@@ -554,7 +662,7 @@ function renderQueues(){
             }
         });
 
-        if(court.queue.length === 0) q.innerHTML = `<div class="empty-hint">拖曳人員到此排隊</div>`;
+        if(court.queue.length === 0) q.innerHTML = `<div class="empty-hint">拖曳或點選人員到此排隊</div>`;
     });
 }
 
@@ -587,6 +695,7 @@ function movePlayerTo(playerId,courtIndex,target){
     }else{
         courts[courtIndex].queue.push(playerId);
     }
+    selectedPlayerId = null;
     render();
 }
 
@@ -724,6 +833,8 @@ function deletePlayer(){
 }
 
 function openSettingModal(){
+    selectedPlayerId = null;
+    render();
     document.getElementById("settingModal").style.display = "flex";
     document.getElementById("courtCount").value = courtCount;
     document.getElementById("playersPerCourt").value = playersPerCourt;
@@ -790,7 +901,7 @@ function saveSetting(){
 
 function exportPlayers(){
     const data = {
-        version:"1.4-V6",
+        version:"1.5-V7",
         exportedAt:new Date().toISOString(),
         levelColors,
         courtNames,
@@ -802,7 +913,7 @@ function exportPlayers(){
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "badminton_players_v6.json";
+    a.download = "badminton_players_v7.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -831,6 +942,7 @@ function importPlayers(event){
             }));
 
             waitingPlayers = players.map(p=>p.id);
+            selectedPlayerId = null;
             initCourts();
             render();
             alert("人員清單已載入");
@@ -842,6 +954,14 @@ function importPlayers(event){
     };
     reader.readAsText(file, "UTF-8");
 }
+
+document.body.addEventListener("click", function(e){
+    if(e.target.closest(".player-card") || e.target.closest(".slot-area") || e.target.closest(".queue-list") || e.target.closest("button") || e.target.closest(".modal")) return;
+    if(selectedPlayerId){
+        selectedPlayerId = null;
+        render();
+    }
+});
 
 initCourts();
 render();
